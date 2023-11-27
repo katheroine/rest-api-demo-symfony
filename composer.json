@@ -1,6 +1,15 @@
 {
+    "name": "katheroine/rest-api-demo-symfony",
+    "description": "REST API Demo on Symfony framework",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
+    "authors" : [
+        {
+            "name": "Katarzyna Krasińska",
+            "email": "katheroine@gmail.com",
+            "role": "Developer"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
