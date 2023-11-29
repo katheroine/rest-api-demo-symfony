@@ -13,6 +13,30 @@ class AccountTest extends TestCase
 {
     private const POST_ENTITY_FULLY_QUALIFIED_CLASS_NAME = 'App\Entity\Post';
 
+    private const POST_FIELD_ID = 'id';
+    private const POST_FIELD_CREATED_AT = 'createdAt';
+    private const POST_FIELD_UPDATED_AT = 'updatedAt';
+    private const POST_FIELD_SLUG = 'slug';
+    private const POST_FIELD_TITLE = 'title';
+    private const POST_FIELD_CONTENT = 'content';
+
+    private static array $getterNames = [
+        self::POST_FIELD_ID => 'getId',
+        self::POST_FIELD_CREATED_AT => 'getCreatedAt',
+        self::POST_FIELD_UPDATED_AT => 'getUpdatedAt',
+        self::POST_FIELD_SLUG => 'getSlug',
+        self::POST_FIELD_TITLE => 'getTitle',
+        self::POST_FIELD_CONTENT => 'getContent',
+    ];
+
+    private static array $setterNames = [
+        self::POST_FIELD_CREATED_AT => 'setCreatedAt',
+        self::POST_FIELD_UPDATED_AT => 'setUpdatedAt',
+        self::POST_FIELD_SLUG => 'setSlug',
+        self::POST_FIELD_TITLE => 'setTitle',
+        self::POST_FIELD_CONTENT => 'setContent',
+    ];
+
     public function testPostEntityClassExists()
     {
         $this->assertTrue(
@@ -32,23 +56,6 @@ class AccountTest extends TestCase
             )
         );
     }
-
-    private static array $getterNames = [
-        'id' => 'getId',
-        'createdAt' => 'getCreatedAt',
-        'updatedAt' => 'getUpdatedAt',
-        'slug' => 'getSlug',
-        'title' => 'getTitle',
-        'content' => 'getContent',
-    ];
-
-    private static array $setterNames = [
-        'createdAt' => 'setCreatedAt',
-        'updatedAt' => 'setUpdatedAt',
-        'slug' => 'setSlug',
-        'title' => 'setTitle',
-        'content' => 'setContent',
-    ];
 
     /**
      * @dataProvider setterNamesAndArguemntsProvider
@@ -156,10 +163,10 @@ class AccountTest extends TestCase
         $errors = $post->validate();
 
         $this->assertCount(1, $errors);
-        $this->assertArrayHasKey('slug', $errors);
+        $this->assertArrayHasKey(self::POST_FIELD_SLUG, $errors);
         $this->assertEquals(
             'Slug cannot be longer than 127 characters',
-            $errors['slug']
+            $errors[self::POST_FIELD_SLUG]
         );
     }
 
@@ -210,10 +217,10 @@ class AccountTest extends TestCase
         $errors = $post->validate();
 
         $this->assertCount(1, $errors);
-        $this->assertArrayHasKey('title', $errors);
+        $this->assertArrayHasKey(self::POST_FIELD_TITLE, $errors);
         $this->assertEquals(
             'Title cannot be longer than 255 characters',
-            $errors['title']
+            $errors[self::POST_FIELD_TITLE]
         );
     }
 
@@ -264,10 +271,10 @@ class AccountTest extends TestCase
         $errors = $post->validate();
 
         $this->assertCount(1, $errors);
-        $this->assertArrayHasKey('content', $errors);
+        $this->assertArrayHasKey(self::POST_FIELD_CONTENT, $errors);
         $this->assertEquals(
             'Content cannot be longer than 1023 characters',
-            $errors['content']
+            $errors[self::POST_FIELD_CONTENT]
         );
     }
 
@@ -309,11 +316,11 @@ class AccountTest extends TestCase
         $nowDateTime = new DateTimeImmutable();
 
         return [
-            [self::$setterNames['createdAt'], $nowDateTime],
-            [self::$setterNames['updatedAt'], $nowDateTime],
-            [self::$setterNames['slug'], 'some-post'],
-            [self::$setterNames['title'], 'Some title'],
-            [self::$setterNames['content'], 'Some content'],
+            [self::$setterNames[self::POST_FIELD_CREATED_AT], $nowDateTime],
+            [self::$setterNames[self::POST_FIELD_UPDATED_AT], $nowDateTime],
+            [self::$setterNames[self::POST_FIELD_SLUG], 'some-post'],
+            [self::$setterNames[self::POST_FIELD_TITLE], 'Some title'],
+            [self::$setterNames[self::POST_FIELD_CONTENT], 'Some content'],
         ];
     }
 
