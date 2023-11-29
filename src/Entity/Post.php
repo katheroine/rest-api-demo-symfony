@@ -8,11 +8,12 @@ use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validation;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
+    use Validateable;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -108,20 +109,5 @@ class Post
         $this->content = $content;
 
         return $this;
-    }
-
-    public function validate(): array
-    {
-        $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping()
-            ->getValidator();
-        $violations = $validator->validate($this);
-
-        $errors = [];
-        foreach ($violations as $violation) {
-            $errors[$violation->getPropertyPath()] = $violation->getMessage();
-        }
-
-        return $errors;
     }
 }
