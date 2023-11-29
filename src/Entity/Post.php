@@ -7,6 +7,8 @@ namespace App\Entity;
 use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validation;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -22,13 +24,25 @@ class Post
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
-    #[ORM\Column(length: 128, nullable: true)]
+    #[ORM\Column(length: 127, nullable: true)]
+    #[Assert\Length(
+        max: 127,
+        maxMessage: 'Slug cannot be longer than {{ limit }} characters',
+    )]
     private ?string $slug = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Title cannot be longer than {{ limit }} characters',
+    )]
     private ?string $title = null;
 
-    #[ORM\Column(length: 1024, nullable: true)]
+    #[ORM\Column(length: 1023, nullable: true)]
+    #[Assert\Length(
+        max: 1023,
+        maxMessage: 'Content cannot be longer than {{ limit }} characters',
+    )]
     private ?string $content = null;
 
     public function getId(): ?int
@@ -94,5 +108,20 @@ class Post
         $this->content = $content;
 
         return $this;
+    }
+
+    public function validate(): array
+    {
+        $validator = Validation::createValidatorBuilder()
+            ->enableAnnotationMapping()
+            ->getValidator();
+        $violations = $validator->validate($this);
+
+        $errors = [];
+        foreach ($violations as $violation) {
+            $errors[$violation->getPropertyPath()] = $violation->getMessage();
+        }
+
+        return $errors;
     }
 }

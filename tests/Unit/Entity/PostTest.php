@@ -11,7 +11,7 @@ use DateTimeImmutable;
 
 class AccountTest extends TestCase
 {
-    const POST_ENTITY_FULLY_QUALIFIED_CLASS_NAME = 'App\Entity\Post';
+    private const POST_ENTITY_FULLY_QUALIFIED_CLASS_NAME = 'App\Entity\Post';
 
     public function testPostEntityClassExists()
     {
@@ -95,7 +95,6 @@ class AccountTest extends TestCase
         $createdAtActualValue = $post->getCreatedAt();
 
         $this->assertSame($createdAtExpectedValue, $createdAtActualValue);
-
     }
 
     /**
@@ -121,7 +120,6 @@ class AccountTest extends TestCase
         $updatedAtActualValue = $post->getUpdatedAt();
 
         $this->assertSame($updatedAtExpectedValue, $updatedAtActualValue);
-
     }
 
     /**
@@ -136,6 +134,35 @@ class AccountTest extends TestCase
         $post->setSlug($slugImproperValue);
     }
 
+    public function testSetSlugWhenArgumentHasMaximalLength()
+    {
+        $post = new Post();
+
+        $slugValue = str_repeat('a', 127);
+
+        $post->setSlug($slugValue);
+        $errors = $post->validate();
+
+        $this->assertEmpty($errors);
+    }
+
+    public function testSetSlugWhenArgumentIsTooLong()
+    {
+        $post = new Post();
+
+        $slugValue = str_repeat('a', 128);
+
+        $post->setSlug($slugValue);
+        $errors = $post->validate();
+
+        $this->assertCount(1, $errors);
+        $this->assertArrayHasKey('slug', $errors);
+        $this->assertEquals(
+            'Slug cannot be longer than 127 characters',
+            $errors['slug']
+        );
+    }
+
     /**
      * @dataProvider setSlugProperArgumentsProvider
      */
@@ -147,7 +174,6 @@ class AccountTest extends TestCase
         $slugActualValue = $post->getSlug();
 
         $this->assertSame($slugExpectedValue, $slugActualValue);
-
     }
 
     /**
@@ -160,6 +186,35 @@ class AccountTest extends TestCase
         $this->expectException('\TypeError');
 
         $post->setTitle($titleImproperValue);
+    }
+
+    public function testSetTitleWhenArgumentHasMaximalLength()
+    {
+        $post = new Post();
+
+        $titleValue = str_repeat('a', 255);
+
+        $post->setTitle($titleValue);
+        $errors = $post->validate();
+
+        $this->assertEmpty($errors);
+    }
+
+    public function testSetTitleWhenArgumentIsTooLong()
+    {
+        $post = new Post();
+
+        $titleValue = str_repeat('a', 256);
+
+        $post->setTitle($titleValue);
+        $errors = $post->validate();
+
+        $this->assertCount(1, $errors);
+        $this->assertArrayHasKey('title', $errors);
+        $this->assertEquals(
+            'Title cannot be longer than 255 characters',
+            $errors['title']
+        );
     }
 
     /**
@@ -187,6 +242,35 @@ class AccountTest extends TestCase
         $post->setContent($contentImproperValue);
     }
 
+    public function testSetContentWhenArgumentHasMaximalLength()
+    {
+        $post = new Post();
+
+        $contentValue = str_repeat('a', 1023);
+
+        $post->setContent($contentValue);
+        $errors = $post->validate();
+
+        $this->assertEmpty($errors);
+    }
+
+    public function testSetContentWhenArgumentIsTooLong()
+    {
+        $post = new Post();
+
+        $contentValue = str_repeat('a', 1024);
+
+        $post->setContent($contentValue);
+        $errors = $post->validate();
+
+        $this->assertCount(1, $errors);
+        $this->assertArrayHasKey('content', $errors);
+        $this->assertEquals(
+            'Content cannot be longer than 1023 characters',
+            $errors['content']
+        );
+    }
+
     /**
      * @dataProvider setTitleAndSetContentProperArgumentsProvider
      */
@@ -200,12 +284,21 @@ class AccountTest extends TestCase
         $this->assertSame($contentExpectedValue, $contentActualValue);
     }
 
-
     public static function accessorNamesProvider(): array
     {
         $accessorNames = array_merge(
-            array_map(function($getterName) { return [$getterName]; }, self::$getterNames),
-            array_map(function($setterName) { return [$setterName]; }, self::$setterNames)
+            array_map(
+                function ($getterName) {
+                    return [$getterName];
+                },
+                self::$getterNames
+            ),
+            array_map(
+                function ($setterName) {
+                    return [$setterName];
+                },
+                self::$setterNames
+            )
         );
 
         return $accessorNames;
@@ -226,8 +319,11 @@ class AccountTest extends TestCase
 
     public static function getterNamesProvider(): array
     {
-        $accessorNames = array_merge(
-            array_map(function($getterName) { return [$getterName]; }, self::$getterNames)
+        $accessorNames = array_map(
+            function ($getterName) {
+                return [$getterName];
+            },
+            self::$getterNames
         );
 
         return $accessorNames;
