@@ -24,7 +24,7 @@ use DateTimeImmutable;
  * @license http://opensource.org/licenses/MIT MIT License
  * @link https://github.com/katheroine/rest-api-demo-symfony
  */
-class AccountTest extends TestCase
+class PostTest extends TestCase
 {
     private const POST_ENTITY_FULLY_QUALIFIED_CLASS_NAME = 'App\Entity\Post';
 
