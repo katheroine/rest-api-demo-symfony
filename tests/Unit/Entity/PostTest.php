@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of REST API Demo Symfony application.
+ *
+ * (c) Katarzyna Krasińska
+ *
+ * For the full copyright and license information,
+ * please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace App\Tests\Unit\Entity;
 
 use PHPUnit\Framework\TestCase;
@@ -9,6 +18,12 @@ use App\Entity\Post;
 use DateTime;
 use DateTimeImmutable;
 
+/**
+ * @author Katarzyna Krasińska <katheroine@gmail.com>
+ * @copyright Copyright (c) Katarzyna Krasińska
+ * @license http://opensource.org/licenses/MIT MIT License
+ * @link https://github.com/katheroine/rest-api-demo-symfony
+ */
 class AccountTest extends TestCase
 {
     private const POST_ENTITY_FULLY_QUALIFIED_CLASS_NAME = 'App\Entity\Post';
@@ -291,6 +306,9 @@ class AccountTest extends TestCase
         $this->assertSame($contentExpectedValue, $contentActualValue);
     }
 
+    /**
+     * @return array
+     */
     public static function accessorNamesProvider(): array
     {
         $accessorNames = array_merge(
@@ -311,6 +329,9 @@ class AccountTest extends TestCase
         return $accessorNames;
     }
 
+    /**
+     * @return array
+     */
     public static function setterNamesAndArguemntsProvider(): array
     {
         $nowDateTime = new DateTimeImmutable();
@@ -324,6 +345,9 @@ class AccountTest extends TestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function getterNamesProvider(): array
     {
         $accessorNames = array_map(
@@ -336,6 +360,9 @@ class AccountTest extends TestCase
         return $accessorNames;
     }
 
+    /**
+     * @return array
+     */
     public static function setCreatedAtImproperArgumentsProvider(): array
     {
         return [
@@ -349,6 +376,9 @@ class AccountTest extends TestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function setCreatedAtProperArgumentsProvider(): array
     {
         return [
@@ -357,6 +387,9 @@ class AccountTest extends TestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function setUpdatedAtImproperArgumentsProvider(): array
     {
         return [
@@ -369,6 +402,9 @@ class AccountTest extends TestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function setUpdatedAtProperArgumentsProvider(): array
     {
         return [
@@ -379,6 +415,9 @@ class AccountTest extends TestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function setSlugImproperArgumentsProvider(): array
     {
         return [
@@ -390,6 +429,9 @@ class AccountTest extends TestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function setSlugProperArgumentsProvider(): array
     {
         return [
@@ -400,6 +442,9 @@ class AccountTest extends TestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function setTitleAndSetContentImproperArgumentsProvider(): array
     {
         return [
@@ -411,6 +456,9 @@ class AccountTest extends TestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function setTitleAndSetContentProperArgumentsProvider(): array
     {
         return [
