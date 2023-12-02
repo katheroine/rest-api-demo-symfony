@@ -74,6 +74,8 @@
             "@auto-scripts"
         ],
         "test": "vendor/bin/phpunit",
+        "test-unit": "vendor/bin/phpunit tests/Unit",
+        "test-integration": "vendor/bin/phpunit tests/Integration",
         "sniff": "vendor/bin/phpcs",
         "check": "composer test; composer sniff"
     },
