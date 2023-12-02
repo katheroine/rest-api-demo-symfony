@@ -12,6 +12,9 @@ class PostControllerTest extends WebTestCase
 
     private const API_URI_PREFIX = '/api/';
 
+    private const HEADER_CONTENT_TYPE_KEY = 'Content-Type';
+    private const HEADER_CONTENT_TYPE_VALUE_JSON = 'application/json';
+
     public function testListPosts()
     {
         $this->sendRequest(
@@ -19,15 +22,53 @@ class PostControllerTest extends WebTestCase
             uri: self::buildApiUri('posts')
         );
 
-        $this->assertEquals(
-            200,
-            $this->getResponseStatusCode()
-        );
+        $this->assertResonseStatusIs(200);
 
-        $this->assertJsonStringEqualsJsonString(
-            '{"message": "RADS: list_posts"}',
-            $this->getResponseContent()
-        );
+        $this->assertResponseContentIsJson();
+
+        $responseAsJsonString = $this->getResponseContent();
+        $responseAsArray = json_decode($responseAsJsonString);
+
+        $this->assertCount(3, $responseAsArray);
+
+        $expectedPostObject1 = (object) [
+            'id' => 1,
+            'createdAt' => "2023-11-28T20:46:04+00:00",
+            'updatedAt' => "2023-11-28T20:46:04+00:00",
+            'slug' => "some-post-fixture-1",
+            'title' => "Some post fixture 1",
+            'content' => "Some text of some post fixture 1."
+        ];
+
+        $actualPostObject1 = $responseAsArray[0];
+
+        $this->assertEquals($expectedPostObject1, $actualPostObject1);
+
+        $expectedPostObject2 = (object) [
+            'id' => 2,
+            'createdAt' => "2023-11-29T20:46:04+00:00",
+            'updatedAt' => "2023-11-29T20:46:04+00:00",
+            'slug' => "some-post-fixture-2",
+            'title' => "Some post fixture 2",
+            'content' => "Some text of some post fixture 2."
+        ];
+
+        $actualPostObject2 = $responseAsArray[1];
+
+        $this->assertEquals($expectedPostObject2, $actualPostObject2);
+
+        $expectedPostObject3 = (object) [
+            'id' => 3,
+            'createdAt' => "2023-11-30T20:46:04+00:00",
+            'updatedAt' => "2023-11-30T20:46:04+00:00",
+            'slug' => "some-post-fixture-3",
+            'title' => "Some post fixture 3",
+            'content' => "Some text of some post fixture 3."
+        ];
+
+        $actualPostObject3 = $responseAsArray[2];
+
+        $this->assertEquals($expectedPostObject3, $actualPostObject3);
     }
 
     public function testShowPost()
@@ -39,43 +80,69 @@ class PostControllerTest extends WebTestCase
             uri: self::buildApiUri("posts/{$postId}")
         );
 
-        $this->assertEquals(
-            200,
-            $this->getResponseStatusCode()
+        $this->assertResonseStatusIs(200);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'id' => 1,
+            'createdAt' => "2023-11-28T20:46:04+00:00",
+            'updatedAt' => "2023-11-28T20:46:04+00:00",
+            'slug' => "some-post-fixture-1",
+            'title' => "Some post fixture 1",
+            'content' => "Some text of some post fixture 1."
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testShowPostWhenPostDoesNotExist()
+    {
+        $postId = 1000;
+
+        $this->sendRequest(
+            method: 'GET',
+            uri: self::buildApiUri("posts/{$postId}")
         );
 
-        $this->assertJsonStringEqualsJsonString(
-            '{"message": "RADS: show_post"}',
-            $this->getResponseContent()
-        );
+        $this->assertResonseStatusIs(404);
     }
 
     public function testCreatePost()
     {
         $creationDateTime = new DateTime();
-        $textualCreationDateTime = $creationDateTime->format('Y-m-d H:i:s');
+        $textualCreationDateTime = $creationDateTime->format('c');
 
         $this->sendRequest(
             method: 'POST',
             uri: self::buildApiUri("posts"),
             parameters: [
-                'createdAt' => $textualCreationDateTime,
-                'updatedAt' => $textualCreationDateTime,
-                'slug' => 'some-post',
-                'title' => 'Some post',
-                'contnet' => 'Some text of some post.',
+                'slug' => 'some-post-fixture',
+                'title' => 'Some post fixture',
+                'content' => 'Some text of some post fixture.',
             ]
         );
 
-        $this->assertEquals(
-            200,
-            $this->getResponseStatusCode()
-        );
+        $this->assertResonseStatusIs(201);
 
-        $this->assertJsonStringEqualsJsonString(
-            '{"message": "RADS: create_post"}',
-            $this->getResponseContent()
-        );
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'id' => 4,
+            'createdAt' => $textualCreationDateTime,
+            'updatedAt' => $textualCreationDateTime,
+            'slug' => "some-post-fixture",
+            'title' => "Some post fixture",
+            'content' => "Some text of some post fixture."
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
     }
 
     public function testUpdatePost()
@@ -83,49 +150,92 @@ class PostControllerTest extends WebTestCase
         $postId = 1;
 
         $creationDateTime = new DateTime();
-        $textualCreationDateTime = $creationDateTime->format('Y-m-d H:i:s');
+        $textualCreationDateTime = $creationDateTime->format('c');
 
         $this->sendRequest(
             method: 'PUT',
             uri: self::buildApiUri("posts/{$postId}"),
             parameters: [
-                'createdAt' => $textualCreationDateTime,
-                'updatedAt' => $textualCreationDateTime,
+                'content' => 'Some updated text of some updated post.',
                 'slug' => 'some-post-updated',
                 'title' => 'Some post updated',
-                'contnet' => 'Some updated text of some updated post.',
             ]
         );
 
-        $this->assertEquals(
-            200,
-            $this->getResponseStatusCode()
+        $this->assertResonseStatusIs(200);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'id' => 1,
+            'createdAt' => "2023-11-28T20:46:04+00:00",
+            'updatedAt' => $textualCreationDateTime,
+            'slug' => 'some-post-updated',
+            'title' => 'Some post updated',
+            'content' => 'Some updated text of some updated post.'
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testUpdatePostWhenPostDoesNotExist()
+    {
+        $postId = 1000;
+
+        $this->sendRequest(
+            method: 'PUT',
+            uri: self::buildApiUri("posts/{$postId}"),
+            parameters: [
+                'content' => 'Some updated text of some updated post.',
+                'slug' => 'some-post-updated',
+                'title' => 'Some post updated',
+            ]
         );
 
-        $this->assertJsonStringEqualsJsonString(
-            '{"message": "RADS: update_post"}',
-            $this->getResponseContent()
-        );
+        $this->assertResonseStatusIs(404);
     }
 
     public function testDeletePost()
     {
-        $postId = 1;
+        $postId = 2;
 
         $this->sendRequest(
             method: 'DELETE',
             uri: self::buildApiUri("posts/{$postId}")
         );
 
-        $this->assertEquals(
-            200,
-            $this->getResponseStatusCode()
+        $this->assertResonseStatusIs(200);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'id' => null,
+            'createdAt' => "2023-11-29T20:46:04+00:00",
+            'updatedAt' => "2023-11-29T20:46:04+00:00",
+            'slug' => "some-post-fixture-2",
+            'title' => "Some post fixture 2",
+            'content' => "Some text of some post fixture 2."
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testDeletePostWhenPostDoesNotExist()
+    {
+        $postId = 1000;
+
+        $this->sendRequest(
+            method: 'DELETE',
+            uri: self::buildApiUri("posts/{$postId}")
         );
 
-        $this->assertJsonStringEqualsJsonString(
-            '{"message": "RADS: delete_post"}',
-            $this->getResponseContent()
-        );
+        $this->assertResonseStatusIs(404);
     }
 
     /**
@@ -161,11 +271,45 @@ class PostControllerTest extends WebTestCase
     }
 
     /**
+     * @param int $statusCode
+     *
+     * @return void
+     */
+    private function assertResonseStatusIs(int $statusCode): void
+    {
+        $failMessage = "Failed asserting that response status code is {$statusCode}.";
+
+        $this->assertEquals(
+            $statusCode,
+            $this->getResponseStatusCode(),
+            $failMessage
+        );
+    }
+
+    /**
+     * @return void
+     */
+    private function assertResponseContentIsJson(): void
+    {
+        $this->assertTrue(
+            $this->getResponseHeaders()->contains(
+                self::HEADER_CONTENT_TYPE_KEY,
+                self::HEADER_CONTENT_TYPE_VALUE_JSON
+            )
+        );
+    }
+
+    /**
      * @return int
      */
     private function getResponseStatusCode(): int
     {
         return $this->client->getResponse()->getStatusCode();
+    }
+
+    private function getResponseHeaders()
+    {
+        return $this->client->getResponse()->headers;
     }
 
     /**

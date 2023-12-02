@@ -13,50 +13,77 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Post;
+use App\Repository\PostRepository;
+use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/api', name: 'api_')]
 class PostController extends AbstractController
 {
-    #[Route('/api/posts', name: 'list_posts', methods: ['GET'])]
-    public function index(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'RADS: list_posts',
-        ]);
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ) {
     }
 
-    #[Route('/api/posts/{id}', name: 'show_post', methods: ['GET'])]
-    public function show(int $id): JsonResponse
+    #[Route('/posts', name: 'list_posts', methods: ['GET'])]
+    public function index(PostRepository $postRepository): JsonResponse
     {
-        return $this->json([
-            'message' => 'RADS: show_post',
-        ]);
+        $posts = $postRepository->findAll();
+
+        return $this->json($posts);
     }
 
-    #[Route('/api/posts', name: 'create_post', methods: ['POST'])]
+    #[Route('/posts/{id}', name: 'show_post', methods: ['GET'])]
+    public function show(Post $post): JsonResponse
+    {
+        return $this->json($post);
+    }
+
+    #[Route('/posts', name: 'create_post', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        return $this->json([
-            'message' => 'RADS: create_post',
-        ]);
+        $post = new Post();
+        $dateTime = new DateTimeImmutable();
+        $post
+            ->setCreatedAt($dateTime)
+            ->setUpdatedAt($dateTime)
+            ->setSlug($request->get('slug'))
+            ->setTitle($request->get('title'))
+            ->setContent($request->get('content'));
+
+        $this->entityManager->persist($post);
+        $this->entityManager->flush();
+
+        return $this->json($post, status: 201);
     }
 
-    #[Route('/api/posts/{id}', name: 'update_post', methods: ['PUT'])]
-    public function update(Request $request)
+    #[Route('/posts/{id}', name: 'update_post', methods: ['PUT', 'PATCH'])]
+    public function update(Request $request, Post $post): JsonResponse
     {
-        return $this->json([
-            'message' => 'RADS: update_post',
-        ]);
+        $dateTime = new DateTimeImmutable();
+        $post
+            ->setUpdatedAt($dateTime)
+            ->setSlug($request->get('slug'))
+            ->setTitle($request->get('title'))
+            ->setContent($request->get('content'));
+
+        $this->entityManager->persist($post);
+        $this->entityManager->flush();
+
+        return $this->json($post, status: 200);
     }
 
-    #[Route('/api/posts/{id}', name: 'delete_post', methods: ['DELETE'])]
-    public function delete(int $id)
+    #[Route('/posts/{id}', name: 'delete_post', methods: ['DELETE'])]
+    public function delete(Post $post)
     {
-        return $this->json([
-            'message' => 'RADS: delete_post',
-        ]);
+        $this->entityManager->remove($post);
+        $this->entityManager->flush();
+
+        return $this->json($post, status: 200);
     }
 }
