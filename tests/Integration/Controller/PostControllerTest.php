@@ -109,6 +109,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(404);
+
+        $this->assertResponseIsPostNotFoundMessage($postId);
     }
 
     public function testCreatePost()
@@ -196,6 +198,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(404);
+
+        $this->assertResponseIsPostNotFoundMessage($postId);
     }
 
     public function testDeletePost()
@@ -236,6 +240,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(404);
+
+        $this->assertResponseIsPostNotFoundMessage($postId);
     }
 
     /**
@@ -296,6 +302,19 @@ class PostControllerTest extends WebTestCase
                 self::HEADER_CONTENT_TYPE_KEY,
                 self::HEADER_CONTENT_TYPE_VALUE_JSON
             )
+        );
+    }
+
+    /**
+     * @param int $postId
+     *
+     * @return void
+     */
+    private function assertResponseIsPostNotFoundMessage(int $postId): void
+    {
+        $this->assertEquals(
+            "\"Post with id {$postId} not found.\"",
+            $this->getResponseContent()
         );
     }
 

@@ -35,13 +35,21 @@ class PostController extends AbstractController
     {
         $posts = $postRepository->findAll();
 
-        return $this->json($posts);
+        return $this->json($posts, status: 200);
     }
 
     #[Route('/posts/{id}', name: 'show_post', methods: ['GET'])]
-    public function show(Post $post): JsonResponse
+    public function show(PostRepository $postRepository, int $id): JsonResponse
     {
-        return $this->json($post);
+        $post = $postRepository->findOneById($id);
+
+        if (is_null($post)) {
+            $message = "Post with id {$id} not found.";
+
+            return $this->json($message, status: 404);
+        }
+
+        return $this->json($post, status: 200);
     }
 
     #[Route('/posts', name: 'create_post', methods: ['POST'])]
@@ -63,8 +71,16 @@ class PostController extends AbstractController
     }
 
     #[Route('/posts/{id}', name: 'update_post', methods: ['PUT', 'PATCH'])]
-    public function update(Request $request, Post $post): JsonResponse
+    public function update(PostRepository $postRepository, Request $request, int $id): JsonResponse
     {
+        $post = $postRepository->findOneById($id);
+
+        if (is_null($post)) {
+            $message = "Post with id {$id} not found.";
+
+            return $this->json($message, status: 404);
+        }
+
         $dateTime = new DateTimeImmutable();
         $post
             ->setUpdatedAt($dateTime)
@@ -79,8 +95,16 @@ class PostController extends AbstractController
     }
 
     #[Route('/posts/{id}', name: 'delete_post', methods: ['DELETE'])]
-    public function delete(Post $post)
+    public function delete(PostRepository $postRepository, int $id)
     {
+        $post = $postRepository->findOneById($id);
+
+        if (is_null($post)) {
+            $message = "Post with id {$id} not found.";
+
+            return $this->json($message, status: 404);
+        }
+
         $this->entityManager->remove($post);
         $this->entityManager->flush();
 
