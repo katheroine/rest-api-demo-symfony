@@ -71,6 +71,275 @@ class PostControllerTest extends WebTestCase
         $this->assertEquals($expectedPostObject3, $actualPostObject3);
     }
 
+    public function testListPostsWithLimit()
+    {
+        $limit = 2;
+
+        $this->sendRequest(
+            method: 'GET',
+            uri: self::buildApiUri("posts?limit={$limit}")
+        );
+
+        $this->assertResonseStatusIs(200);
+
+        $this->assertResponseContentIsJson();
+
+        $responseAsJsonString = $this->getResponseContent();
+        $responseAsArray = json_decode($responseAsJsonString);
+
+        $this->assertCount(2, $responseAsArray);
+
+        $expectedPostObject1 = (object) [
+            'id' => 1,
+            'createdAt' => "2023-11-28T20:46:04+00:00",
+            'updatedAt' => "2023-11-28T20:46:04+00:00",
+            'slug' => "some-post-fixture-1",
+            'title' => "Some post fixture 1",
+            'content' => "Some text of some post fixture 1."
+        ];
+
+        $actualPostObject1 = $responseAsArray[0];
+
+        $this->assertEquals($expectedPostObject1, $actualPostObject1);
+
+        $expectedPostObject2 = (object) [
+            'id' => 2,
+            'createdAt' => "2023-11-29T20:46:04+00:00",
+            'updatedAt' => "2023-11-29T20:46:04+00:00",
+            'slug' => "some-post-fixture-2",
+            'title' => "Some post fixture 2",
+            'content' => "Some text of some post fixture 2."
+        ];
+
+        $actualPostObject2 = $responseAsArray[1];
+
+        $this->assertEquals($expectedPostObject2, $actualPostObject2);
+    }
+
+    public function testListPostsWithOffset()
+    {
+        $offset = 1;
+
+        $this->sendRequest(
+            method: 'GET',
+            uri: self::buildApiUri("posts?offset={$offset}")
+        );
+
+        $this->assertResonseStatusIs(200);
+
+        $this->assertResponseContentIsJson();
+
+        $responseAsJsonString = $this->getResponseContent();
+        $responseAsArray = json_decode($responseAsJsonString);
+
+        $this->assertCount(2, $responseAsArray);
+
+        $expectedPostObject1 = (object) [
+            'id' => 2,
+            'createdAt' => "2023-11-29T20:46:04+00:00",
+            'updatedAt' => "2023-11-29T20:46:04+00:00",
+            'slug' => "some-post-fixture-2",
+            'title' => "Some post fixture 2",
+            'content' => "Some text of some post fixture 2."
+        ];
+
+        $actualPostObject1 = $responseAsArray[0];
+
+        $this->assertEquals($expectedPostObject1, $actualPostObject1);
+
+        $expectedPostObject2 = (object) [
+            'id' => 3,
+            'createdAt' => "2023-11-30T20:46:04+00:00",
+            'updatedAt' => "2023-11-30T20:46:04+00:00",
+            'slug' => "some-post-fixture-3",
+            'title' => "Some post fixture 3",
+            'content' => "Some text of some post fixture 3."
+        ];
+
+        $actualPostObject2 = $responseAsArray[1];
+
+        $this->assertEquals($expectedPostObject2, $actualPostObject2);
+    }
+
+    public function testListPostsWithLimitAndOffset()
+    {
+        $limit = 1;
+        $offset = 2;
+
+        $this->sendRequest(
+            method: 'GET',
+            uri: self::buildApiUri("posts?limit={$limit}&offset={$offset}")
+        );
+
+        $this->assertResonseStatusIs(200);
+
+        $this->assertResponseContentIsJson();
+
+        $responseAsJsonString = $this->getResponseContent();
+        $responseAsArray = json_decode($responseAsJsonString);
+
+        $this->assertCount(1, $responseAsArray);
+
+        $expectedPostObject1 = (object) [
+            'id' => 3,
+            'createdAt' => "2023-11-30T20:46:04+00:00",
+            'updatedAt' => "2023-11-30T20:46:04+00:00",
+            'slug' => "some-post-fixture-3",
+            'title' => "Some post fixture 3",
+            'content' => "Some text of some post fixture 3."
+        ];
+
+        $actualPostObject1 = $responseAsArray[0];
+
+        $this->assertEquals($expectedPostObject1, $actualPostObject1);
+    }
+
+    public function testListPostsWenLimitIsNegative()
+    {
+        $limit = -1;
+
+        $this->sendRequest(
+            method: 'GET',
+            uri: self::buildApiUri("posts?limit={$limit}")
+        );
+
+        $this->assertResonseStatusIs(400);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'limit' => 'This value should be either positive or zero.'
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testListPostsWenLimitIsTooBig()
+    {
+        $limit = 101;
+
+        $this->sendRequest(
+            method: 'GET',
+            uri: self::buildApiUri("posts?limit={$limit}")
+        );
+
+        $this->assertResonseStatusIs(400);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'limit' => 'This value should be less than 100.'
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testListPostsWenLimitIsString()
+    {
+        $limit = 'apple';
+
+        $this->sendRequest(
+            method: 'GET',
+            uri: self::buildApiUri("posts?limit={$limit}")
+        );
+
+        $this->assertResonseStatusIs(200);
+
+        $this->assertResponseContentIsJson();
+
+        $responseAsJsonString = $this->getResponseContent();
+        $responseAsArray = json_decode($responseAsJsonString);
+
+        $this->assertCount(0, $responseAsArray);
+    }
+
+    public function testListPostsWenOffsetIsNegative()
+    {
+        $offset = -2;
+
+        $this->sendRequest(
+            method: 'GET',
+            uri: self::buildApiUri("posts?offset={$offset}")
+        );
+
+        $this->assertResonseStatusIs(400);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'offset' => 'This value should be either positive or zero.'
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testListPostsWenOffsetIsString()
+    {
+        $offset = 'apple';
+
+        $this->sendRequest(
+            method: 'GET',
+            uri: self::buildApiUri("posts?offset={$offset}")
+        );
+
+        $this->assertResonseStatusIs(200);
+
+        $this->assertResponseContentIsJson();
+
+        $responseAsJsonString = $this->getResponseContent();
+        $responseAsArray = json_decode($responseAsJsonString);
+
+        $this->assertCount(3, $responseAsArray);
+
+        $expectedPostObject1 = (object) [
+            'id' => 1,
+            'createdAt' => "2023-11-28T20:46:04+00:00",
+            'updatedAt' => "2023-11-28T20:46:04+00:00",
+            'slug' => "some-post-fixture-1",
+            'title' => "Some post fixture 1",
+            'content' => "Some text of some post fixture 1."
+        ];
+
+        $actualPostObject1 = $responseAsArray[0];
+
+        $this->assertEquals($expectedPostObject1, $actualPostObject1);
+
+        $expectedPostObject2 = (object) [
+            'id' => 2,
+            'createdAt' => "2023-11-29T20:46:04+00:00",
+            'updatedAt' => "2023-11-29T20:46:04+00:00",
+            'slug' => "some-post-fixture-2",
+            'title' => "Some post fixture 2",
+            'content' => "Some text of some post fixture 2."
+        ];
+
+        $actualPostObject2 = $responseAsArray[1];
+
+        $this->assertEquals($expectedPostObject2, $actualPostObject2);
+
+        $expectedPostObject3 = (object) [
+            'id' => 3,
+            'createdAt' => "2023-11-30T20:46:04+00:00",
+            'updatedAt' => "2023-11-30T20:46:04+00:00",
+            'slug' => "some-post-fixture-3",
+            'title' => "Some post fixture 3",
+            'content' => "Some text of some post fixture 3."
+        ];
+
+        $actualPostObject3 = $responseAsArray[2];
+
+        $this->assertEquals($expectedPostObject3, $actualPostObject3);
+    }
+
     public function testShowPost()
     {
         $postId = 1;

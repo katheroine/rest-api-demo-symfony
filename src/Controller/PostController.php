@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Controller\ValidationObject\Limitation;
 use App\Entity\Post;
 use App\Repository\PostRepository;
 use DateTimeImmutable;
@@ -31,9 +32,20 @@ class PostController extends AbstractController
     }
 
     #[Route('/posts', name: 'list_posts', methods: ['GET'])]
-    public function index(PostRepository $postRepository): JsonResponse
+    public function index(PostRepository $postRepository, Request $request): JsonResponse
     {
-        $posts = $postRepository->findAll();
+        $limit = $request->query->getInt('limit', default: 10);
+        $offset = $request->query->getInt('offset', default: 0);
+
+        $limitation = new Limitation($limit, $offset);
+
+        $validationErrors = $limitation->validate();
+
+        if (!empty($validationErrors)) {
+            return $this->json($validationErrors, 400);
+        }
+
+        $posts = $postRepository->findAllLimited($limit, $offset);
 
         return $this->json($posts, status: 200);
     }

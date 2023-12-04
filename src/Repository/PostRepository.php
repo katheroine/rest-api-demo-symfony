@@ -38,4 +38,15 @@ class PostRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Post::class);
     }
+
+   /**
+    * @param int $limit
+    * @param int $offset
+    *
+    * @return Post[]
+    */
+    public function findAllLimited(int $limit, int $offset = 0): array
+    {
+        return $this->findBy([], null, $limit, $offset);
+    }
 }
