@@ -23,52 +23,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(200);
-
         $this->assertResponseContentIsJson();
-
-        $responseAsJsonString = $this->getResponseContent();
-        $responseAsArray = json_decode($responseAsJsonString);
-
-        $this->assertCount(3, $responseAsArray);
-
-        $expectedPostObject1 = (object) [
-            'id' => 1,
-            'createdAt' => "2023-11-28T20:46:04+00:00",
-            'updatedAt' => "2023-11-28T20:46:04+00:00",
-            'slug' => "some-post-fixture-1",
-            'title' => "Some post fixture 1",
-            'content' => "Some text of some post fixture 1."
-        ];
-
-        $actualPostObject1 = $responseAsArray[0];
-
-        $this->assertEquals($expectedPostObject1, $actualPostObject1);
-
-        $expectedPostObject2 = (object) [
-            'id' => 2,
-            'createdAt' => "2023-11-29T20:46:04+00:00",
-            'updatedAt' => "2023-11-29T20:46:04+00:00",
-            'slug' => "some-post-fixture-2",
-            'title' => "Some post fixture 2",
-            'content' => "Some text of some post fixture 2."
-        ];
-
-        $actualPostObject2 = $responseAsArray[1];
-
-        $this->assertEquals($expectedPostObject2, $actualPostObject2);
-
-        $expectedPostObject3 = (object) [
-            'id' => 3,
-            'createdAt' => "2023-11-30T20:46:04+00:00",
-            'updatedAt' => "2023-11-30T20:46:04+00:00",
-            'slug' => "some-post-fixture-3",
-            'title' => "Some post fixture 3",
-            'content' => "Some text of some post fixture 3."
-        ];
-
-        $actualPostObject3 = $responseAsArray[2];
-
-        $this->assertEquals($expectedPostObject3, $actualPostObject3);
+        $this->assertResponseContainsAllPostItems();
     }
 
     public function testListPostsWithLimit()
@@ -81,39 +37,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(200);
-
         $this->assertResponseContentIsJson();
-
-        $responseAsJsonString = $this->getResponseContent();
-        $responseAsArray = json_decode($responseAsJsonString);
-
-        $this->assertCount(2, $responseAsArray);
-
-        $expectedPostObject1 = (object) [
-            'id' => 1,
-            'createdAt' => "2023-11-28T20:46:04+00:00",
-            'updatedAt' => "2023-11-28T20:46:04+00:00",
-            'slug' => "some-post-fixture-1",
-            'title' => "Some post fixture 1",
-            'content' => "Some text of some post fixture 1."
-        ];
-
-        $actualPostObject1 = $responseAsArray[0];
-
-        $this->assertEquals($expectedPostObject1, $actualPostObject1);
-
-        $expectedPostObject2 = (object) [
-            'id' => 2,
-            'createdAt' => "2023-11-29T20:46:04+00:00",
-            'updatedAt' => "2023-11-29T20:46:04+00:00",
-            'slug' => "some-post-fixture-2",
-            'title' => "Some post fixture 2",
-            'content' => "Some text of some post fixture 2."
-        ];
-
-        $actualPostObject2 = $responseAsArray[1];
-
-        $this->assertEquals($expectedPostObject2, $actualPostObject2);
+        $this->assertResponseContainsLimitedPostItems();
     }
 
     public function testListPostsWithOffset()
@@ -126,39 +51,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(200);
-
         $this->assertResponseContentIsJson();
-
-        $responseAsJsonString = $this->getResponseContent();
-        $responseAsArray = json_decode($responseAsJsonString);
-
-        $this->assertCount(2, $responseAsArray);
-
-        $expectedPostObject1 = (object) [
-            'id' => 2,
-            'createdAt' => "2023-11-29T20:46:04+00:00",
-            'updatedAt' => "2023-11-29T20:46:04+00:00",
-            'slug' => "some-post-fixture-2",
-            'title' => "Some post fixture 2",
-            'content' => "Some text of some post fixture 2."
-        ];
-
-        $actualPostObject1 = $responseAsArray[0];
-
-        $this->assertEquals($expectedPostObject1, $actualPostObject1);
-
-        $expectedPostObject2 = (object) [
-            'id' => 3,
-            'createdAt' => "2023-11-30T20:46:04+00:00",
-            'updatedAt' => "2023-11-30T20:46:04+00:00",
-            'slug' => "some-post-fixture-3",
-            'title' => "Some post fixture 3",
-            'content' => "Some text of some post fixture 3."
-        ];
-
-        $actualPostObject2 = $responseAsArray[1];
-
-        $this->assertEquals($expectedPostObject2, $actualPostObject2);
+        $this->assertResponseContainsOffsetPostItems();
     }
 
     public function testListPostsWithLimitAndOffset()
@@ -172,26 +66,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(200);
-
         $this->assertResponseContentIsJson();
-
-        $responseAsJsonString = $this->getResponseContent();
-        $responseAsArray = json_decode($responseAsJsonString);
-
-        $this->assertCount(1, $responseAsArray);
-
-        $expectedPostObject1 = (object) [
-            'id' => 3,
-            'createdAt' => "2023-11-30T20:46:04+00:00",
-            'updatedAt' => "2023-11-30T20:46:04+00:00",
-            'slug' => "some-post-fixture-3",
-            'title' => "Some post fixture 3",
-            'content' => "Some text of some post fixture 3."
-        ];
-
-        $actualPostObject1 = $responseAsArray[0];
-
-        $this->assertEquals($expectedPostObject1, $actualPostObject1);
+        $this->assertResponseContainsLimitedAndOffsetPostItems();
     }
 
     public function testListPostsWenLimitIsNegative()
@@ -204,17 +80,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(400);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'limit' => 'This value should be either positive or zero.'
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsNagativeLimitError();
     }
 
     public function testListPostsWenLimitIsTooBig()
@@ -227,17 +94,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(400);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'limit' => 'This value should be less than 100.'
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsTooBigLimitError();
     }
 
     public function testListPostsWenLimitIsString()
@@ -250,13 +108,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(200);
-
         $this->assertResponseContentIsJson();
-
-        $responseAsJsonString = $this->getResponseContent();
-        $responseAsArray = json_decode($responseAsJsonString);
-
-        $this->assertCount(0, $responseAsArray);
+        $this->assertResponseContainsNoPostItems();
     }
 
     public function testListPostsWenOffsetIsNegative()
@@ -269,17 +122,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(400);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'offset' => 'This value should be either positive or zero.'
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsNegativeOffsetError();
     }
 
     public function testListPostsWenOffsetIsString()
@@ -292,52 +136,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(200);
-
         $this->assertResponseContentIsJson();
-
-        $responseAsJsonString = $this->getResponseContent();
-        $responseAsArray = json_decode($responseAsJsonString);
-
-        $this->assertCount(3, $responseAsArray);
-
-        $expectedPostObject1 = (object) [
-            'id' => 1,
-            'createdAt' => "2023-11-28T20:46:04+00:00",
-            'updatedAt' => "2023-11-28T20:46:04+00:00",
-            'slug' => "some-post-fixture-1",
-            'title' => "Some post fixture 1",
-            'content' => "Some text of some post fixture 1."
-        ];
-
-        $actualPostObject1 = $responseAsArray[0];
-
-        $this->assertEquals($expectedPostObject1, $actualPostObject1);
-
-        $expectedPostObject2 = (object) [
-            'id' => 2,
-            'createdAt' => "2023-11-29T20:46:04+00:00",
-            'updatedAt' => "2023-11-29T20:46:04+00:00",
-            'slug' => "some-post-fixture-2",
-            'title' => "Some post fixture 2",
-            'content' => "Some text of some post fixture 2."
-        ];
-
-        $actualPostObject2 = $responseAsArray[1];
-
-        $this->assertEquals($expectedPostObject2, $actualPostObject2);
-
-        $expectedPostObject3 = (object) [
-            'id' => 3,
-            'createdAt' => "2023-11-30T20:46:04+00:00",
-            'updatedAt' => "2023-11-30T20:46:04+00:00",
-            'slug' => "some-post-fixture-3",
-            'title' => "Some post fixture 3",
-            'content' => "Some text of some post fixture 3."
-        ];
-
-        $actualPostObject3 = $responseAsArray[2];
-
-        $this->assertEquals($expectedPostObject3, $actualPostObject3);
+        $this->assertResponseContainsAllPostItems();
     }
 
     public function testShowPost()
@@ -350,22 +150,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(200);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'id' => 1,
-            'createdAt' => "2023-11-28T20:46:04+00:00",
-            'updatedAt' => "2023-11-28T20:46:04+00:00",
-            'slug' => "some-post-fixture-1",
-            'title' => "Some post fixture 1",
-            'content' => "Some text of some post fixture 1."
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsOnePostWithId1();
     }
 
     public function testShowPostWhenPostDoesNotExist()
@@ -378,7 +164,6 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(404);
-
         $this->assertResponseIsPostNotFoundMessage($postId);
     }
 
@@ -387,33 +172,26 @@ class PostControllerTest extends WebTestCase
         $creationDateTime = new DateTime();
         $textualCreationDateTime = $creationDateTime->format('c');
 
+        $parameters = [
+            'slug' => 'some-post-fixture',
+            'title' => 'Some post fixture',
+            'content' => 'Some text of some post fixture.',
+        ];
+
         $this->sendRequest(
             method: 'POST',
             uri: self::buildApiUri("posts"),
-            parameters: [
-                'slug' => 'some-post-fixture',
-                'title' => 'Some post fixture',
-                'content' => 'Some text of some post fixture.',
-            ]
+            parameters: $parameters
         );
 
+        $fields = $parameters;
+        $fields['id'] = 4;
+        $fields['createdAt'] = $textualCreationDateTime;
+        $fields['updatedAt'] = $textualCreationDateTime;
+
         $this->assertResonseStatusIs(201);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'id' => 4,
-            'createdAt' => $textualCreationDateTime,
-            'updatedAt' => $textualCreationDateTime,
-            'slug' => "some-post-fixture",
-            'title' => "Some post fixture",
-            'content' => "Some text of some post fixture."
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsOnePostWithFields($fields);
     }
 
     public function testCreatePostWhenSlugIsTooLong()
@@ -431,17 +209,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(400);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'slug' => 'Slug cannot be longer than 127 characters'
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsTooLongSlugError();
     }
 
     public function testCreatePostWhenTitleIsTooLong()
@@ -459,17 +228,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(400);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'title' => 'Title cannot be longer than 255 characters'
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsTooLongTitleError();
     }
 
     public function testCreatePostWhenContentIsTooLong()
@@ -487,17 +247,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(400);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'content' => 'Content cannot be longer than 1023 characters'
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsTooLongContentError();
     }
 
     public function testUpdatePost()
@@ -507,33 +258,26 @@ class PostControllerTest extends WebTestCase
         $creationDateTime = new DateTime();
         $textualCreationDateTime = $creationDateTime->format('c');
 
+        $parameters = [
+            'slug' => 'some-post-updated',
+            'title' => 'Some post updated',
+            'content' => 'Some updated text of some updated post.',
+        ];
+
         $this->sendRequest(
             method: 'PUT',
             uri: self::buildApiUri("posts/{$postId}"),
-            parameters: [
-                'slug' => 'some-post-updated',
-                'title' => 'Some post updated',
-                'content' => 'Some updated text of some updated post.',
-            ]
+            parameters: $parameters,
         );
 
+        $fields = $parameters;
+        $fields['id'] = 1;
+        $fields['createdAt'] = '2023-11-28T20:46:04+00:00';
+        $fields['updatedAt'] = $textualCreationDateTime;
+
         $this->assertResonseStatusIs(200);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'id' => 1,
-            'createdAt' => "2023-11-28T20:46:04+00:00",
-            'updatedAt' => $textualCreationDateTime,
-            'slug' => 'some-post-updated',
-            'title' => 'Some post updated',
-            'content' => 'Some updated text of some updated post.'
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsOnePostWithFields($fields);
     }
 
     public function testUpdatePostWhenSlugIsTooLong()
@@ -553,17 +297,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(400);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'slug' => 'Slug cannot be longer than 127 characters'
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsTooLongSlugError();
     }
 
     public function testUpdatePostWhenTitleIsTooLong()
@@ -583,17 +318,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(400);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'title' => 'Title cannot be longer than 255 characters'
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsTooLongTitleError();
     }
 
     public function testUpdatePostWhenContentIsTooLong()
@@ -613,17 +339,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(400);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'content' => 'Content cannot be longer than 1023 characters'
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsTooLongContentError();
     }
 
     public function testUpdatePostWhenPostDoesNotExist()
@@ -641,7 +358,6 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(404);
-
         $this->assertResponseIsPostNotFoundMessage($postId);
     }
 
@@ -655,22 +371,8 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(200);
-
         $this->assertResponseContentIsJson();
-
-        $expectedPostObject = (object) [
-            'id' => null,
-            'createdAt' => "2023-11-29T20:46:04+00:00",
-            'updatedAt' => "2023-11-29T20:46:04+00:00",
-            'slug' => "some-post-fixture-2",
-            'title' => "Some post fixture 2",
-            'content' => "Some text of some post fixture 2."
-        ];
-
-        $responseAsJsonString = $this->getResponseContent();
-        $actualPostObject = json_decode($responseAsJsonString);
-
-        $this->assertEquals($expectedPostObject, $actualPostObject);
+        $this->assertResponseContainsOnePostWithNoId();
     }
 
     public function testDeletePostWhenPostDoesNotExist()
@@ -683,8 +385,230 @@ class PostControllerTest extends WebTestCase
         );
 
         $this->assertResonseStatusIs(404);
-
         $this->assertResponseIsPostNotFoundMessage($postId);
+    }
+
+    private function assertResponseContainsAllPostItems(): void
+    {
+        $responseItems = $this->getDecodedResponseContent();
+
+        $this->assertCount(3, $responseItems);
+
+        $expectedPostObject1 = (object) [
+            'id' => 1,
+            'createdAt' => "2023-11-28T20:46:04+00:00",
+            'updatedAt' => "2023-11-28T20:46:04+00:00",
+            'slug' => "some-post-fixture-1",
+            'title' => "Some post fixture 1",
+            'content' => "Some text of some post fixture 1."
+        ];
+        $actualPostObject1 = $responseItems[0];
+        $this->assertEquals($expectedPostObject1, $actualPostObject1);
+
+        $expectedPostObject2 = (object) [
+            'id' => 2,
+            'createdAt' => "2023-11-29T20:46:04+00:00",
+            'updatedAt' => "2023-11-29T20:46:04+00:00",
+            'slug' => "some-post-fixture-2",
+            'title' => "Some post fixture 2",
+            'content' => "Some text of some post fixture 2."
+        ];
+        $actualPostObject2 = $responseItems[1];
+        $this->assertEquals($expectedPostObject2, $actualPostObject2);
+
+        $expectedPostObject3 = (object) [
+            'id' => 3,
+            'createdAt' => "2023-11-30T20:46:04+00:00",
+            'updatedAt' => "2023-11-30T20:46:04+00:00",
+            'slug' => "some-post-fixture-3",
+            'title' => "Some post fixture 3",
+            'content' => "Some text of some post fixture 3."
+        ];
+        $actualPostObject3 = $responseItems[2];
+        $this->assertEquals($expectedPostObject3, $actualPostObject3);
+    }
+
+    private function assertResponseContainsLimitedPostItems(): void
+    {
+        $responseItems = $this->getDecodedResponseContent();
+
+        $this->assertCount(2, $responseItems);
+
+        $expectedPostObject1 = (object) [
+            'id' => 1,
+            'createdAt' => "2023-11-28T20:46:04+00:00",
+            'updatedAt' => "2023-11-28T20:46:04+00:00",
+            'slug' => "some-post-fixture-1",
+            'title' => "Some post fixture 1",
+            'content' => "Some text of some post fixture 1."
+        ];
+        $actualPostObject1 = $responseItems[0];
+        $this->assertEquals($expectedPostObject1, $actualPostObject1);
+
+        $expectedPostObject2 = (object) [
+            'id' => 2,
+            'createdAt' => "2023-11-29T20:46:04+00:00",
+            'updatedAt' => "2023-11-29T20:46:04+00:00",
+            'slug' => "some-post-fixture-2",
+            'title' => "Some post fixture 2",
+            'content' => "Some text of some post fixture 2."
+        ];
+        $actualPostObject2 = $responseItems[1];
+        $this->assertEquals($expectedPostObject2, $actualPostObject2);
+    }
+
+    private function assertResponseContainsOffsetPostItems(): void
+    {
+        $responseItems = $this->getDecodedResponseContent();
+
+        $this->assertCount(2, $responseItems);
+
+        $expectedPostObject1 = (object) [
+            'id' => 2,
+            'createdAt' => "2023-11-29T20:46:04+00:00",
+            'updatedAt' => "2023-11-29T20:46:04+00:00",
+            'slug' => "some-post-fixture-2",
+            'title' => "Some post fixture 2",
+            'content' => "Some text of some post fixture 2."
+        ];
+        $actualPostObject1 = $responseItems[0];
+        $this->assertEquals($expectedPostObject1, $actualPostObject1);
+
+        $expectedPostObject2 = (object) [
+            'id' => 3,
+            'createdAt' => "2023-11-30T20:46:04+00:00",
+            'updatedAt' => "2023-11-30T20:46:04+00:00",
+            'slug' => "some-post-fixture-3",
+            'title' => "Some post fixture 3",
+            'content' => "Some text of some post fixture 3."
+        ];
+        $actualPostObject2 = $responseItems[1];
+        $this->assertEquals($expectedPostObject2, $actualPostObject2);
+    }
+
+    private function assertResponseContainsLimitedAndOffsetPostItems(): void
+    {
+        $responseItems = $this->getDecodedResponseContent();
+
+        $this->assertCount(1, $responseItems);
+
+        $expectedPostObject1 = (object) [
+            'id' => 3,
+            'createdAt' => "2023-11-30T20:46:04+00:00",
+            'updatedAt' => "2023-11-30T20:46:04+00:00",
+            'slug' => "some-post-fixture-3",
+            'title' => "Some post fixture 3",
+            'content' => "Some text of some post fixture 3."
+        ];
+        $actualPostObject1 = $responseItems[0];
+        $this->assertEquals($expectedPostObject1, $actualPostObject1);
+    }
+
+    private function assertResponseContainsOnePostWithId1(): void
+    {
+        $expectedPostObject = (object) [
+            'id' => 1,
+            'createdAt' => "2023-11-28T20:46:04+00:00",
+            'updatedAt' => "2023-11-28T20:46:04+00:00",
+            'slug' => "some-post-fixture-1",
+            'title' => "Some post fixture 1",
+            'content' => "Some text of some post fixture 1."
+        ];
+        $actualPostObject = $this->getDecodedResponseContent();
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    private function assertResponseContainsOnePostWithNoId(): void
+    {
+        $expectedPostObject = (object) [
+            'id' => null,
+            'createdAt' => "2023-11-29T20:46:04+00:00",
+            'updatedAt' => "2023-11-29T20:46:04+00:00",
+            'slug' => "some-post-fixture-2",
+            'title' => "Some post fixture 2",
+            'content' => "Some text of some post fixture 2."
+        ];
+        $actualPostObject = $this->getDecodedResponseContent();
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    private function assertResponseContainsOnePostWithFields(array $fields): void
+    {
+        $expectedPostObject = (object) $fields;
+        $actualPostObject = $this->getDecodedResponseContent();
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    private function assertResponseContainsNoPostItems(): void
+    {
+        $responseItems = $this->getDecodedResponseContent();
+        $this->assertCount(0, $responseItems);
+    }
+
+    private function assertResponseContainsNagativeLimitError(): void
+    {
+        $expectedErrorObject = (object) [
+            'limit' => 'This value should be either positive or zero.'
+        ];
+        $actualErrorObject = $this->getDecodedResponseContent();
+        $this->assertEquals($expectedErrorObject, $actualErrorObject);
+    }
+
+    private function assertResponseContainsNegativeOffsetError(): void
+    {
+        $expectedErrorObject = (object) [
+            'offset' => 'This value should be either positive or zero.'
+        ];
+        $actualErrorObject = $this->getDecodedResponseContent();
+        $this->assertEquals($expectedErrorObject, $actualErrorObject);
+    }
+
+    private function assertResponseContainsTooBigLimitError(): void
+    {
+        $expectedErrorObject = (object) [
+            'limit' => 'This value should be less than 100.'
+        ];
+        $actualErrorObject = $this->getDecodedResponseContent();
+        $this->assertEquals($expectedErrorObject, $actualErrorObject);
+    }
+
+    private function assertResponseContainsTooLongSlugError(): void
+    {
+        $expectedErrorObject = (object) [
+            'slug' => 'Slug cannot be longer than 127 characters'
+        ];
+        $actualErrorObject = $this->getDecodedResponseContent();
+        $this->assertEquals($expectedErrorObject, $actualErrorObject);
+    }
+
+    public function assertResponseContainsTooLongTitleError(): void
+    {
+        $expectedPostObject = (object) [
+            'title' => 'Title cannot be longer than 255 characters'
+        ];
+
+        $actualPostObject = $this->getDecodedResponseContent();
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    private function assertResponseContainsTooLongContentError(): void
+    {
+        $expectedPostObject = (object) [
+            'content' => 'Content cannot be longer than 1023 characters'
+        ];
+
+        $actualPostObject = $this->getDecodedResponseContent();
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    private function getDecodedResponseContent(): array|object
+    {
+        $encodedResponse = $this->getResponseContent();
+        $decodedResponse = json_decode($encodedResponse);
+
+        return $decodedResponse;
     }
 
     /**
