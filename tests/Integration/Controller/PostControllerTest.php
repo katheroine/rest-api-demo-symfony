@@ -147,6 +147,90 @@ class PostControllerTest extends WebTestCase
         $this->assertEquals($expectedPostObject, $actualPostObject);
     }
 
+    public function testCreatePostWhenSlugIsTooLong()
+    {
+        $slug = str_repeat('a', 128);
+
+        $this->sendRequest(
+            method: 'POST',
+            uri: self::buildApiUri("posts"),
+            parameters: [
+                'slug' => $slug,
+                'title' => 'Some post fixture',
+                'content' => 'Some text of some post fixture.',
+            ]
+        );
+
+        $this->assertResonseStatusIs(400);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'slug' => 'Slug cannot be longer than 127 characters'
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testCreatePostWhenTitleIsTooLong()
+    {
+        $title = str_repeat('a', 256);
+
+        $this->sendRequest(
+            method: 'POST',
+            uri: self::buildApiUri("posts"),
+            parameters: [
+                'slug' => 'some-post-fixture',
+                'title' => $title,
+                'content' => 'Some text of some post fixture.',
+            ]
+        );
+
+        $this->assertResonseStatusIs(400);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'title' => 'Title cannot be longer than 255 characters'
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testCreatePostWhenContentIsTooLong()
+    {
+        $content = str_repeat('a', 1024);
+
+        $this->sendRequest(
+            method: 'POST',
+            uri: self::buildApiUri("posts"),
+            parameters: [
+                'slug' => 'some-post-fixture',
+                'title' => 'Some post fixture',
+                'content' => $content,
+            ]
+        );
+
+        $this->assertResonseStatusIs(400);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'content' => 'Content cannot be longer than 1023 characters'
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
     public function testUpdatePost()
     {
         $postId = 1;
@@ -158,9 +242,9 @@ class PostControllerTest extends WebTestCase
             method: 'PUT',
             uri: self::buildApiUri("posts/{$postId}"),
             parameters: [
-                'content' => 'Some updated text of some updated post.',
                 'slug' => 'some-post-updated',
                 'title' => 'Some post updated',
+                'content' => 'Some updated text of some updated post.',
             ]
         );
 
@@ -175,6 +259,96 @@ class PostControllerTest extends WebTestCase
             'slug' => 'some-post-updated',
             'title' => 'Some post updated',
             'content' => 'Some updated text of some updated post.'
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testUpdatePostWhenSlugIsTooLong()
+    {
+        $slug = str_repeat('a', 128);
+
+        $postId = 1;
+
+        $this->sendRequest(
+            method: 'PUT',
+            uri: self::buildApiUri("posts/{$postId}"),
+            parameters: [
+                'slug' => $slug,
+                'title' => 'Some post updated',
+                'content' => 'Some updated text of some updated post.',
+            ]
+        );
+
+        $this->assertResonseStatusIs(400);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'slug' => 'Slug cannot be longer than 127 characters'
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testUpdatePostWhenTitleIsTooLong()
+    {
+        $title = str_repeat('a', 256);
+
+        $postId = 1;
+
+        $this->sendRequest(
+            method: 'PUT',
+            uri: self::buildApiUri("posts/{$postId}"),
+            parameters: [
+                'slug' => 'some-post-updated',
+                'title' => $title,
+                'content' => 'Some updated text of some updated post.',
+            ]
+        );
+
+        $this->assertResonseStatusIs(400);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'title' => 'Title cannot be longer than 255 characters'
+        ];
+
+        $responseAsJsonString = $this->getResponseContent();
+        $actualPostObject = json_decode($responseAsJsonString);
+
+        $this->assertEquals($expectedPostObject, $actualPostObject);
+    }
+
+    public function testUpdatePostWhenContentIsTooLong()
+    {
+        $content = str_repeat('a', 1024);
+
+        $postId = 1;
+
+        $this->sendRequest(
+            method: 'PUT',
+            uri: self::buildApiUri("posts/{$postId}"),
+            parameters: [
+                'slug' => 'some-post-updated',
+                'title' => 'Some post updated',
+                'content' => $content,
+            ]
+        );
+
+        $this->assertResonseStatusIs(400);
+
+        $this->assertResponseContentIsJson();
+
+        $expectedPostObject = (object) [
+            'content' => 'Content cannot be longer than 1023 characters'
         ];
 
         $responseAsJsonString = $this->getResponseContent();

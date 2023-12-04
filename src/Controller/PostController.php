@@ -56,6 +56,7 @@ class PostController extends AbstractController
     public function create(Request $request): JsonResponse
     {
         $post = new Post();
+
         $dateTime = new DateTimeImmutable();
         $post
             ->setCreatedAt($dateTime)
@@ -63,6 +64,12 @@ class PostController extends AbstractController
             ->setSlug($request->get('slug'))
             ->setTitle($request->get('title'))
             ->setContent($request->get('content'));
+
+        $validationErrors = $post->validate();
+
+        if (!empty($validationErrors)) {
+            return $this->json($validationErrors, 400);
+        }
 
         $this->entityManager->persist($post);
         $this->entityManager->flush();
@@ -87,6 +94,12 @@ class PostController extends AbstractController
             ->setSlug($request->get('slug'))
             ->setTitle($request->get('title'))
             ->setContent($request->get('content'));
+
+        $validationErrors = $post->validate();
+
+        if (!empty($validationErrors)) {
+            return $this->json($validationErrors, 400);
+        }
 
         $this->entityManager->persist($post);
         $this->entityManager->flush();
