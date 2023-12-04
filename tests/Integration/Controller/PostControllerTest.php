@@ -79,7 +79,7 @@ class PostControllerTest extends WebTestCase
             uri: self::buildApiUri("posts?limit={$limit}")
         );
 
-        $this->assertResonseStatusIs(400);
+        $this->assertResonseStatusIs(422);
         $this->assertResponseContentIsJson();
         $this->assertResponseContainsNagativeLimitError();
     }
@@ -93,7 +93,7 @@ class PostControllerTest extends WebTestCase
             uri: self::buildApiUri("posts?limit={$limit}")
         );
 
-        $this->assertResonseStatusIs(400);
+        $this->assertResonseStatusIs(422);
         $this->assertResponseContentIsJson();
         $this->assertResponseContainsTooBigLimitError();
     }
@@ -121,7 +121,7 @@ class PostControllerTest extends WebTestCase
             uri: self::buildApiUri("posts?offset={$offset}")
         );
 
-        $this->assertResonseStatusIs(400);
+        $this->assertResonseStatusIs(422);
         $this->assertResponseContentIsJson();
         $this->assertResponseContainsNegativeOffsetError();
     }
@@ -208,7 +208,7 @@ class PostControllerTest extends WebTestCase
             ]
         );
 
-        $this->assertResonseStatusIs(400);
+        $this->assertResonseStatusIs(422);
         $this->assertResponseContentIsJson();
         $this->assertResponseContainsTooLongSlugError();
     }
@@ -227,7 +227,7 @@ class PostControllerTest extends WebTestCase
             ]
         );
 
-        $this->assertResonseStatusIs(400);
+        $this->assertResonseStatusIs(422);
         $this->assertResponseContentIsJson();
         $this->assertResponseContainsTooLongTitleError();
     }
@@ -246,7 +246,7 @@ class PostControllerTest extends WebTestCase
             ]
         );
 
-        $this->assertResonseStatusIs(400);
+        $this->assertResonseStatusIs(422);
         $this->assertResponseContentIsJson();
         $this->assertResponseContainsTooLongContentError();
     }
@@ -296,7 +296,7 @@ class PostControllerTest extends WebTestCase
             ]
         );
 
-        $this->assertResonseStatusIs(400);
+        $this->assertResonseStatusIs(422);
         $this->assertResponseContentIsJson();
         $this->assertResponseContainsTooLongSlugError();
     }
@@ -317,7 +317,7 @@ class PostControllerTest extends WebTestCase
             ]
         );
 
-        $this->assertResonseStatusIs(400);
+        $this->assertResonseStatusIs(422);
         $this->assertResponseContentIsJson();
         $this->assertResponseContainsTooLongTitleError();
     }
@@ -338,7 +338,7 @@ class PostControllerTest extends WebTestCase
             ]
         );
 
-        $this->assertResonseStatusIs(400);
+        $this->assertResonseStatusIs(422);
         $this->assertResponseContentIsJson();
         $this->assertResponseContainsTooLongContentError();
     }

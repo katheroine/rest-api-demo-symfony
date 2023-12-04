@@ -42,7 +42,7 @@ class PostController extends AbstractController
         $validationErrors = $limitation->validate();
 
         if (!empty($validationErrors)) {
-            return $this->json($validationErrors, 400);
+            return $this->json($validationErrors, status: 422);
         }
 
         $posts = $postRepository->findAllLimited($limit, $offset);
@@ -80,7 +80,7 @@ class PostController extends AbstractController
         $validationErrors = $post->validate();
 
         if (!empty($validationErrors)) {
-            return $this->json($validationErrors, 400);
+            return $this->json($validationErrors, status: 422);
         }
 
         $this->entityManager->persist($post);
@@ -110,7 +110,7 @@ class PostController extends AbstractController
         $validationErrors = $post->validate();
 
         if (!empty($validationErrors)) {
-            return $this->json($validationErrors, 400);
+            return $this->json($validationErrors, status: 422);
         }
 
         $this->entityManager->persist($post);
