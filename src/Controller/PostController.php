@@ -68,14 +68,7 @@ class PostController extends AbstractController
     public function create(Request $request): JsonResponse
     {
         $post = new Post();
-
-        $dateTime = new DateTimeImmutable();
-        $post
-            ->setCreatedAt($dateTime)
-            ->setUpdatedAt($dateTime)
-            ->setSlug($request->get('slug'))
-            ->setTitle($request->get('title'))
-            ->setContent($request->get('content'));
+        $this->hydratePostForCreation($post, $request);
 
         $validationErrors = $post->validate();
 
@@ -100,12 +93,7 @@ class PostController extends AbstractController
             return $this->json($message, status: 404);
         }
 
-        $dateTime = new DateTimeImmutable();
-        $post
-            ->setUpdatedAt($dateTime)
-            ->setSlug($request->get('slug'))
-            ->setTitle($request->get('title'))
-            ->setContent($request->get('content'));
+        $this->hydratePostForUpdate($post, $request);
 
         $validationErrors = $post->validate();
 
@@ -134,5 +122,42 @@ class PostController extends AbstractController
         $this->entityManager->flush();
 
         return $this->json($post, status: 200);
+    }
+
+    /**
+     * @param Post $post
+     * @param Request $request
+     *
+     * @return Post
+     */
+    private function hydratePostForCreation(Post $post, Request $request): Post
+    {
+        $dateTime = new DateTimeImmutable();
+        $post
+            ->setCreatedAt($dateTime)
+            ->setUpdatedAt($dateTime)
+            ->setSlug($request->get('slug'))
+            ->setTitle($request->get('title'))
+            ->setContent($request->get('content'));
+
+        return $post;
+    }
+
+    /**
+     * @param Post $post
+     * @param Request $request
+     *
+     * @return Post
+     */
+    private function hydratePostForUpdate(Post $post, Request $request): Post
+    {
+        $dateTime = new DateTimeImmutable();
+        $post
+            ->setUpdatedAt($dateTime)
+            ->setSlug($request->get('slug'))
+            ->setTitle($request->get('title'))
+            ->setContent($request->get('content'));
+
+        return $post;
     }
 }

@@ -16,6 +16,12 @@ namespace App\Controller\ValidationObject;
 use App\Validation\Validateable;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @author Katarzyna Krasińska <katheroine@gmail.com>
+ * @copyright Copyright (c) Katarzyna Krasińska
+ * @license http://opensource.org/licenses/MIT MIT License
+ * @link https://github.com/katheroine/rest-api-demo-symfony
+ */
 class Limitation
 {
     use Validateable;
