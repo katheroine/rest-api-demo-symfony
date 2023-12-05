@@ -78,11 +78,12 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "test": "vendor/bin/phpunit",
-        "test-unit": "vendor/bin/phpunit tests/Unit",
-        "test-integration": "vendor/bin/phpunit tests/Integration",
+        "test": "make test-unit; make test-integration",
+        "test-unit": "make test-unit",
+        "test-integration": "make test-integration",
         "sniff": "vendor/bin/phpcs",
-        "check": "composer test; composer sniff"
+        "validate-self": "composer validate --strict",
+        "check": "composer validate; composer test; composer sniff"
     },
     "conflict": {
         "symfony/symfony": "*"
