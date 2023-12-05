@@ -11,7 +11,7 @@ declare(strict_types=1);
  * please view the LICENSE file that was distributed with this source code.
  */
 
-namespace App\Entity;
+namespace App\Validation;
 
 use Symfony\Component\Validator\Validation;
 

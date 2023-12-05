@@ -34,4 +34,4 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
     - name: Run sniffs and unit tests
-      run: composer check
+      run: composer sniff; composer test-unit
