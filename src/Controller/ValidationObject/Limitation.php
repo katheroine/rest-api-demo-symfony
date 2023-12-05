@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace App\Controller\ValidationObject;
 
-use App\Entity\Validateable;
+use App\Validation\Validateable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Limitation
