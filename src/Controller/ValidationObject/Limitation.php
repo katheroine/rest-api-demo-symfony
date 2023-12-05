@@ -33,6 +33,12 @@ class Limitation
     #[Assert\PositiveOrZero()]
     private mixed $offset = null;
 
+    /**
+     * @param mixed $limit
+     * @param mixed $offset
+     *
+     * @return void
+     */
     public function __construct(mixed $limit, mixed $offset)
     {
         $this->limit = $limit;

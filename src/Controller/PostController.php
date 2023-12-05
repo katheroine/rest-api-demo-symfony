@@ -23,12 +23,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @author Katarzyna Krasińska <katheroine@gmail.com>
+ * @copyright Copyright (c) Katarzyna Krasińska
+ * @license http://opensource.org/licenses/MIT MIT License
+ * @link https://github.com/katheroine/rest-api-demo-symfony
+ */
 #[Route('/api', name: 'api_')]
 class PostController extends AbstractController
 {
-    public function __construct(
-        private EntityManagerInterface $entityManager
-    ) {
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
     }
 
     #[Route('/posts', name: 'list_posts', methods: ['GET'])]
