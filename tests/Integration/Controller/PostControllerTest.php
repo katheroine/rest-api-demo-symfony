@@ -1,11 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of REST API Demo Symfony application.
+ *
+ * (c) Katarzyna Krasińska
+ *
+ * For the full copyright and license information,
+ * please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace App\Controller;
 
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\AbstractBrowser;
 
+/**
+ * @author Katarzyna Krasińska <katheroine@gmail.com>
+ * @copyright Copyright (c) Katarzyna Krasińska
+ * @license http://opensource.org/licenses/MIT MIT License
+ * @link https://github.com/katheroine/rest-api-demo-symfony
+ */
 class PostControllerTest extends WebTestCase
 {
     private AbstractBrowser $client;
@@ -14,6 +31,18 @@ class PostControllerTest extends WebTestCase
 
     private const HEADER_CONTENT_TYPE_KEY = 'Content-Type';
     private const HEADER_CONTENT_TYPE_VALUE_JSON = 'application/json';
+
+    public function testNonexistentPath()
+    {
+        $this->sendRequest(
+            method: 'GET',
+            uri: self::buildApiUri('nonexistent')
+        );
+
+        $this->assertResonseStatusIs(500);
+        $this->assertResponseContentIsJson();
+        $this->assertResponseContainsNoRouteFoundError();
+    }
 
     public function testListPosts()
     {
@@ -98,7 +127,7 @@ class PostControllerTest extends WebTestCase
         $this->assertResponseContainsTooBigLimitError();
     }
 
-    public function testListPostsWenLimitIsString()
+    public function testListPostsWhenLimitIsString()
     {
         $limit = 'apple';
 
@@ -112,7 +141,7 @@ class PostControllerTest extends WebTestCase
         $this->assertResponseContainsNoPostItems();
     }
 
-    public function testListPostsWenOffsetIsNegative()
+    public function testListPostsWhenOffsetIsNegative()
     {
         $offset = -2;
 
@@ -126,7 +155,7 @@ class PostControllerTest extends WebTestCase
         $this->assertResponseContainsNegativeOffsetError();
     }
 
-    public function testListPostsWenOffsetIsString()
+    public function testListPostsWhenOffsetIsString()
     {
         $offset = 'apple';
 
@@ -545,6 +574,13 @@ class PostControllerTest extends WebTestCase
         $this->assertCount(0, $responseItems);
     }
 
+    private function assertResponseContainsNoRouteFoundError(): void
+    {
+        $expectedErrorObject = 'Internal Server Error: No route found for "GET http://localhost/api/nonexistent"';
+        $actualErrorObject = $this->getDecodedResponseContent();
+        $this->assertEquals($expectedErrorObject, $actualErrorObject);
+    }
+
     private function assertResponseContainsNagativeLimitError(): void
     {
         $expectedErrorObject = (object) [
@@ -603,7 +639,7 @@ class PostControllerTest extends WebTestCase
         $this->assertEquals($expectedPostObject, $actualPostObject);
     }
 
-    private function getDecodedResponseContent(): array|object
+    private function getDecodedResponseContent(): string|array|object
     {
         $encodedResponse = $this->getResponseContent();
         $decodedResponse = json_decode($encodedResponse);

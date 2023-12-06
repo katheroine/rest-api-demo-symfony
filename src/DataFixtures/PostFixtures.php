@@ -1,5 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of REST API Demo Symfony application.
+ *
+ * (c) Katarzyna Krasińska
+ *
+ * For the full copyright and license information,
+ * please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace App\DataFixtures;
 
 use App\Entity\Post;
@@ -7,6 +18,12 @@ use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * @author Katarzyna Krasińska <katheroine@gmail.com>
+ * @copyright Copyright (c) Katarzyna Krasińska
+ * @license http://opensource.org/licenses/MIT MIT License
+ * @link https://github.com/katheroine/rest-api-demo-symfony
+ */
 class PostFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
